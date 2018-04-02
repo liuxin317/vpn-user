@@ -1,0 +1,114 @@
+body {
+  background-color: #f0f2f5;
+
+  .user-info-box {
+    .user-head {
+      height: 60px;
+      padding: 0 50px;
+      line-height: 60px;
+      background-color: white;
+      box-shadow: 0 3px 6px rgba(0,0,0,.1);
+
+      .info-group {
+        display: flex;
+        align-items: center;
+        height: 60px;
+
+        .info-name__img {
+          display: flex;
+          align-items: center;
+          margin-bottom: 0;
+
+          .name {
+            max-width: 100px;
+            margin-left: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+
+        .exit {
+          margin-left: 20px;
+        }
+      }
+    }
+
+    .user-info-content {
+      display: flex;
+      width: 1200px;
+      max-width: 1400px;
+      margin: 20px auto 0;
+      padding: 40px 20px 40px 0;
+      background: white;
+
+      .info-choose {
+        flex: 1;
+
+        &__group {
+          li {
+            position: relative;
+            height: 48px;
+            margin-bottom: 2px;
+            text-align: center;
+            line-height: 48px;
+            background-color: #cce9ff;
+            font-size: 14px;
+            color: #000;
+            cursor: pointer;
+            
+            &.active {
+              background-color: #20a0ff;
+              color: white;
+
+              &::after {
+                position: absolute;
+                top: 50%;
+                right: -48px;
+                content: "";
+                transform: translate(0, -50%);
+                border-top: 24px solid transparent;
+                border-right: 24px solid transparent;
+                border-bottom: 24px solid transparent;
+                border-left: 24px solid #20a0ff;
+              }
+            }
+          }
+        }
+      }
+
+      .info-box {
+        flex: 4;
+        padding: 10px 20px;
+        background-color: #f8f8f8;
+
+        .info-row-group {
+          display: flex;
+          align-items: center;
+          margin-bottom: 10px;
+
+          label {
+            width: 15%;
+            font-size: 14px;
+            text-align: right;
+            line-height: 40px;
+            color: #555;
+          }
+
+          .edit-group {
+            width: 50%;
+            margin-left: 20px;
+
+            .ant-input {
+              height: 36px;
+            }
+
+            .ant-radio-wrapper {
+              margin-right: 40px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

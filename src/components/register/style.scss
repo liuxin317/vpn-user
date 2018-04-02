@@ -1,0 +1,70 @@
+.register-box {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: #f0f2f5 url("../../imgs/login_bk02.jpg") no-repeat fixed top / cover;
+
+  .register-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    top: 120px;
+    left: 50%;
+    transform: translate(-50%, 0);
+
+    h2 {
+      font-size: 36px;
+      color: white;
+      font-weight: bold;
+      text-align: center;
+      letter-spacing: 2px;
+    }
+
+    .register-group {
+      margin-top: 20px;
+      width: 780px;
+      background-color: rgba(255, 255, 255, .8);
+      box-shadow: 0 0 30px rgba(0, 0, 0, .2);
+
+      .ant-form-item {
+        margin-bottom: 10px;
+      } 
+
+      .nav-table {
+        display: flex;
+        flex-direction: row;
+        background-color: rgba(255, 255, 255, .5);
+
+        li {
+          flex: 1;
+          height: 40px;
+          line-height: 40px;
+          text-align: center;
+          font-size: 16px;
+          color: #000;
+          cursor: pointer;
+
+          &.active {
+            background-color: #1890ff;
+            color: white;
+          }
+        }
+      }
+
+      .register-inputs {
+        margin: 20px 0;
+        padding: 0 100px;
+
+        input.ant-input {
+          height: 40px;
+        }
+
+        .ant-form-item-children button {
+          width: 100%;
+          height: 40px;
+        }
+      }
+    }
+  }
+}
