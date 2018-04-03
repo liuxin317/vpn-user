@@ -8249,7 +8249,7 @@ Trace:
   Exit code: 1
   Command: C:\WINDOWS\system32\cmd.exe
   Arguments: /d /s /c node scripts/start.js
-  Directory: C:\Users\Administrator\Desktop\project\VPN-User
+  Directory: C:\Users\Administrator\Desktop\project\vpn-user
   Output:
   
       at ProcessTermError.MessageError (C:\Users\Administrator\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:186:110)

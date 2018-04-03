@@ -3,6 +3,7 @@ import { Button, Input, DatePicker, Radio, InputNumber, message } from 'antd';
 import headImg from '../../imgs/head_img.png';
 import { getCookie, removeCookie } from '../common/methods';
 import HttpRequest from '../../requset/Fetch';
+import LogList from './component/logListLogin';
 import './style.scss';
 
 import moment from 'moment';
@@ -23,11 +24,11 @@ class UserInfo extends Component {
       active: true,
       id: 0
     },{
-      name: "用户登录日志",
+      name: "登录日志",
       active: false,
       id: 1
     },{
-      name: "用户充值日志",
+      name: "充值日志",
       active: false,
       id: 2
     },{
@@ -44,6 +45,10 @@ class UserInfo extends Component {
     name: "", // 用户姓名
     nickName: "", // 用户昵称
     userInfo: "", //用户信息
+    logType: "", // 日志type
+    pageSize: 10, // 每页条数
+    pageNumber: 1, // 页码
+    logListed: [], // 日志列表
   }
 
   componentDidMount () {
@@ -67,6 +72,16 @@ class UserInfo extends Component {
   switchNavbar = (rowData) => {
     let { infoSwitch } = this.state;
     let newInfoId, catname = rowData.name;
+
+    if (rowData.id === 1) { // 登录日志
+      this.setState({
+        logType: 102
+      }, () => {
+        this.getLogList();
+      })
+    } else if (rowData.id === 0) { // 个人信息
+      this.getUserInfo();
+    }
 
     infoSwitch.forEach(item => {
       if (item.name === rowData.name) {
@@ -102,7 +117,6 @@ class UserInfo extends Component {
         password: e.target.value.trim()
       })
     }
-    
   }
 
   // 修改用户登录密码
@@ -171,8 +185,32 @@ class UserInfo extends Component {
     })
   }
 
+  // 获取日志列表;
+  getLogList = () => {
+    const { pageSize, pageNumber, logType } = this.state;
+
+    HttpRequest("/log/user/query", "GET", {
+      size: pageSize, 
+      page: pageNumber, 
+      type: logType
+    }, res => {
+      this.setState({
+        logListed: res.data
+      })
+    })
+  }
+
+  // 页码回调
+  onChangePage = (number) => {
+    this.setState({
+      pageNumber: number
+    }, () => {
+      this.getLogList()
+    })
+  }
+
   render () {
-    const { newInfoId, userInfo } = this.state;
+    const { pageSize, pageNumber, newInfoId, userInfo, logListed } = this.state;
     const { tariff } = userInfo;
 
     return (
@@ -322,7 +360,14 @@ class UserInfo extends Component {
             :
             newInfoId === 1 // 用户登录日志
             ?
-            <div className="info-box"></div>
+            <div className="info-box">
+              <LogList 
+                dataSource={ logListed }
+                pageSize={ pageSize }
+                pageNumber={ pageNumber }
+                onChangePage={ this.onChangePage }
+              />
+            </div>
             :
             newInfoId === 2 // 用户充值日志
             ?

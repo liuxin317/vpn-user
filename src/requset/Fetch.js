@@ -62,7 +62,9 @@ function httpRequest (url, method, params, successBack, errorBack = null) {
 
             // 删除失效token
             removeCookie("JSESSIONID");
-            window.location.href = "/";
+            setTimeout(() => {
+                window.location.href = "/";
+            }, 1000);
         } if (String(data.code) === "404") {
             message.error('资源未找到');
         } else if (String(data.code) === "500")  {

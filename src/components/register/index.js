@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./style.scss";
 import { Form, Input, Select, Icon, Checkbox, Button, message } from 'antd';
 import HttpRequest from '../../requset/Fetch';
+import { Link } from 'react-router-dom';
 import GetCode from '../common/getCode';
 
 const FormItem = Form.Item;
@@ -252,10 +253,17 @@ class Register extends Component {
                 {
                   RegisterInputGroup
                 }
+                
+                <div style={{ lineHeight: "39px" }}>
+                  <FormItem className="pull-left">
+                    <Checkbox checked={this.state.checked} onChange={this.onChangeCheck}>是否同意 <a href="">注册协议</a></Checkbox>
+                  </FormItem>
 
-                <FormItem>
-                  <Checkbox checked={this.state.checked} onChange={this.onChangeCheck}>是否同意 <a href="">注册协议</a></Checkbox>
-                </FormItem>
+                  <div className="pull-right">
+                    <Link to="/">已有帐号，直接登录</Link>
+                  </div>
+                  <div className="clear"></div>
+                </div>
 
                 <FormItem>
                   <Button type="primary" htmlType="submit">提交注册</Button>
