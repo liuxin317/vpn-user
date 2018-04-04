@@ -1,3 +1,9 @@
+// IE Promise
+import 'core-js/fn/promise';
+// IE object.assign
+import 'core-js/fn/object/assign';
+import 'es6-shim';
+
 // 中文版
 import { LocaleProvider } from 'antd';
 import zh_CN from 'antd/lib/locale-provider/zh_CN';
@@ -11,10 +17,6 @@ import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
-// IE Promise
-import 'core-js/fn/promise';
-// IE object.assign
-import 'core-js/fn/object/assign';
 // 为旧版本提供promise polyfill
 require('es6-promise').polyfill();
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Input, DatePicker, Radio, InputNumber, message } from 'antd';
+import { Button, Input, DatePicker, Radio, InputNumber, message, Tooltip } from 'antd';
 import headImg from '../../imgs/head_img.png';
 import { getCookie, removeCookie } from '../common/methods';
 import HttpRequest from '../../requset/Fetch';
@@ -222,7 +222,11 @@ class UserInfo extends Component {
           <div className="pull-right info-group">
             <figure className="info-name__img">
               <img src={ headImg } style={{ width: 35, height: 35 }} alt=""/>
-              <figcaption className="name">{ userInfo ? userInfo.account : "" }</figcaption>
+              <figcaption className="name">
+                <Tooltip title={ userInfo ? userInfo.account ? userInfo.account : userInfo.email  : "" }>
+                  <span>{ userInfo ? userInfo.account ? userInfo.account : userInfo.email  : "" }</span>
+                </Tooltip>
+              </figcaption>
             </figure>
 
             <Button type="primary" className="exit" onClick={ this.handleClickExit }>退出</Button>
@@ -254,7 +258,7 @@ class UserInfo extends Component {
                 <div className="info-row-group">
                   <label htmlFor="name">账号：</label>
                   <div className="edit-group">
-                    { userInfo ? userInfo.account : "" }
+                    { userInfo ? userInfo.account ? userInfo.account : userInfo.email  : "" }
                   </div>
                 </div>
 
@@ -338,7 +342,7 @@ class UserInfo extends Component {
                 <div className="info-row-group">
                   <label htmlFor="name">邮箱：</label>
                   <div className="edit-group">
-                    <Input defaultValue={ userInfo ? userInfo.email : "" } disabled={true} />
+                    <Input value={ userInfo ? userInfo.email : "" } disabled={true} />
                   </div>
                 </div>
 
