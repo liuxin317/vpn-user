@@ -57,7 +57,7 @@ class UserInfo extends Component {
 
   // 获取用户信息
   getUserInfo = () => {
-    HttpRequest("/user/info", "GET", {}, res => {
+    HttpRequest("/user/info", "POST", {}, res => {
       this.setState({
         userInfo: res.data,
         sex: res.data.sex ? res.data.sex : "",
@@ -189,7 +189,7 @@ class UserInfo extends Component {
   getLogList = () => {
     const { pageSize, pageNumber, logType } = this.state;
 
-    HttpRequest("/log/user/query", "GET", {
+    HttpRequest("/log/user/query", "POST", {
       size: pageSize, 
       page: pageNumber, 
       type: logType
