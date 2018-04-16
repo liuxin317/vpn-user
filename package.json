@@ -107,7 +107,7 @@
   },
   "proxy": {
     "/user": {
-      "target": "https://192.168.10.24:8081",
+      "target": "https://23.83.234.121:8443",
       "changeOrigin": true,
       "secure": false
     }

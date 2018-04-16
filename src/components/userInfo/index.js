@@ -282,16 +282,16 @@ class UserInfo extends Component {
                   <label htmlFor="name">账户类型：</label>
                   <div className="edit-group">
                     {
-                      userInfo ? tariff.type === 0 ? "按流量" : tariff.type === 1 ?  "持续时长" : "自然时长" : ""
+                      userInfo.tariff ? tariff.type === 0 ? "按流量" : tariff.type === 1 ?  "持续时长" : "自然时长" : ""
                     }
                   </div>
                 </div>
 
                 <div className="info-row-group">
-                  <label htmlFor="name">{ userInfo ? tariff.type === 0 ? "剩余流量：" : "剩余时长：" : "" }</label>
+                  <label htmlFor="name">{ userInfo.tariff ? tariff.type === 0 ? "剩余流量：" : "剩余时长：" : "" }</label>
                   <div className="edit-group">
                     {
-                      userInfo ? tariff.type === 0 ? (tariff.flowTotal - tariff.usedFlow) + "KB" : tariff.type === 1 ?  (tariff.timeTotal - tariff.usedTime) + "s" : (tariff.start - tariff.end) + "s" : ""
+                      userInfo.tariff ? tariff.type === 0 ? (tariff.flowTotal - tariff.usedFlow) + "KB" : tariff.type === 1 ?  (tariff.timeTotal - tariff.usedTime) + "s" : (tariff.start - tariff.end) + "s" : ""
                     }
                   </div>
                 </div>
