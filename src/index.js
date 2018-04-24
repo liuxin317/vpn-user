@@ -3,6 +3,7 @@ import 'core-js/fn/promise';
 // IE object.assign
 import 'core-js/fn/object/assign';
 import 'es6-shim';
+import 'fetch-ie8';
 
 // 中文版
 import { LocaleProvider } from 'antd';
