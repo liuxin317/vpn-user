@@ -80,7 +80,12 @@ module.exports = function(proxy, allowedHost) {
       disableDotRule: true,
     },
     public: allowedHost,
-    proxy,
+    proxy: [{ // 如果要将多个特定路径代理给同一个目标，可以使用具有上下文属性的一个或多个对象的数组：
+      context: ["/user", "/code", "/log"],
+      target: "https://192.168.10.30:8081",
+      "changeOrigin": true, // 转发时一定要添加此属性，允许跨域
+      "secure": false
+    }],
     before(app) {
       // This lets us open files from the runtime error overlay.
       app.use(errorOverlayMiddleware());

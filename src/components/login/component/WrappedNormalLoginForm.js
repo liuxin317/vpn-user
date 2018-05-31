@@ -229,7 +229,7 @@ class NormalLoginForm extends Component {
         <FormItem>
           <div>
             <Link to="/register"><span className="login-form-forgot pull-right">注册账户</span></Link> 
-            {/* <Link to="/"><span className="login-form-forgot pull-right">忘记密码</span></Link>  */}
+            <Link to="/retrieval-pw"><span className="login-form-forgot pull-left">忘记密码</span></Link> 
             <div className="clear"></div>
           </div>
           

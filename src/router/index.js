@@ -21,6 +21,12 @@ const loadUserInfo = loadable({
   loading: PreLoading
 })
 
+// 找回密码
+const RetrievalPw = loadable({
+  loader: () => import('../components/retrievalPw'),
+  loading: PreLoading
+})
+
 class ViewRoute extends Component {
   render () {
     return (
@@ -28,6 +34,7 @@ class ViewRoute extends Component {
         <Route path="/" component={ loadLogin } exact />
         <Route path="/register" component={ loadRegidter } />
         <Route path="/info" component={ loadUserInfo } />
+        <Route path="/retrieval-pw" component={ RetrievalPw } />
       </section>
     )
   }

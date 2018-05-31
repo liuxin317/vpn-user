@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
+import HttpRequest from '@/requset/Fetch';
 let timer;
 
 class GetCode extends Component {
@@ -11,6 +12,22 @@ class GetCode extends Component {
 
   componentWillUnmount () {
     clearInterval(timer);
+  }
+
+  // 请求验证码
+  getCode = () => {
+    const { account } = this.props;
+
+    if (!account) {
+      message.warning('请填写帐号！')
+    } else {
+      HttpRequest("/code/getCode", "POST", {
+        account
+      }, res => {
+        message.success('发送成功！')
+        this.getVerification()
+      })
+    }
   }
 
   // 获取验证
@@ -40,7 +57,7 @@ class GetCode extends Component {
 
   render () {
     return (
-      <Button onClick={ this.getVerification } className="pull-right" style={{ position: "relative", zIndex: "100", width: "35%", height: 40 , padding: 0, color: "#333" }} disabled={this.state.verificationButtonDisabled}>{ this.state.verificationText }</Button>
+      <Button onClick={ this.getCode } className="pull-right" style={{ position: "relative", zIndex: "100", width: "35%", height: 40 , padding: 0, color: "#333" }} disabled={this.state.verificationButtonDisabled}>{ this.state.verificationText }</Button>
     )
   }
 }
