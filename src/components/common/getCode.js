@@ -16,13 +16,24 @@ class GetCode extends Component {
 
   // 请求验证码
   getCode = () => {
-    const { account } = this.props;
+    const { account, type, areaCode } = this.props;
+    let str, api, zh;
+
+    if (type === 'phone') {
+      str = '手机号';
+      api = 'getCodeRegister';
+      zh = (areaCode ? areaCode : '') + account;
+    } else {
+      str = '帐号';
+      api = 'getCode';
+      zh = account;
+    }
 
     if (!account) {
-      message.warning('请填写帐号！')
+      message.warning(`请填写${str}！`)
     } else {
-      HttpRequest("/code/getCode", "POST", {
-        account
+      HttpRequest(`/code/${api}`, "POST", {
+        account: zh
       }, res => {
         message.success('发送成功！')
         this.getVerification()

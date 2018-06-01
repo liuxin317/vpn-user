@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Store from '../../../store';
 import Type from '../../../action/Type';
-import { Form, Icon, Input, Button, Radio, message } from 'antd';
+import { Form, Icon, Input, Button, Radio, message, Select, Tooltip } from 'antd';
 import HttpRequest from '../../../requset/Fetch';
 import { setCookie, getCookie } from '../../common/methods';
 import GetCode from '../../common/getCode';
+import countryCode from '@/configure/countryCode';
 import { Redirect } from "react-router-dom";
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
+const Option = Select.Option;
 
 class NormalLoginForm extends Component {
   state = {
@@ -18,46 +20,45 @@ class NormalLoginForm extends Component {
     phone: "", // 手机号
     code: "", // 验证码
     phoneStatus: 2, // 手机登陆方式
-    newloginStatus: '', // 当前登陆方式
     redirect: getCookie("JSESSIONID") ? true : false, // 登录是否成功
+    areaCode: '+86', // 区号
   }
 
   componentDidMount () {
     Store.dispatch({ type: Type.CLEAR_INIT_DATA, payload: { clearInitData: this.clearInitData } })
   }
 
-  componentWillReceiveProps (nextProps) {
-    this.setState({
-      newloginStatus: nextProps.newloginStatus
-    })
-  }
-
   // 登录提交
   handleSubmit = (e) => {
     e.preventDefault();
-    const { email, account, phone, code, password, newloginStatus } = this.state;
+    const { email, account, phone, code, password, phoneStatus, areaCode } = this.state;
+    const { newloginStatus } = this.props;
+    let loginStatus = phoneStatus === 2 ? newloginStatus : phoneStatus;
 
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        if (Number(newloginStatus) === 1) { // 验证邮箱格式
+        if (Number(loginStatus) === 1) { // 验证邮箱格式
           let filterEmail = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
           if (!filterEmail.test(email)) {
             message.warning('邮箱格式不正确！');
             return false;
           }
-        } else if (Number(newloginStatus) === 2 || Number(newloginStatus) === 3) { // 验证手机号
-          let filterPhone = /^((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)$/;
-          if (!filterPhone.test(phone)) {
-            message.warning('手机格式不正确！');
-            return false;
-          }
-        }
+        } 
+        // else if (Number(loginStatus) === 2 || Number(loginStatus) === 3) { // 验证手机号
+        //   let filterPhone = /^((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)$/;
+        //   if (!filterPhone.test(phone)) {
+        //     message.warning('手机格式不正确！');
+        //     return false;
+        //   }
+        // }
+
+        console.log(loginStatus, code)
 
         HttpRequest("/user/login", "POST", {
-          type: newloginStatus,
+          type: loginStatus,
           email,
           account,
-          phone,
+          phone: (areaCode ? areaCode : '') + phone,
           code,
           password
         }, res => {
@@ -122,16 +123,33 @@ class NormalLoginForm extends Component {
     let value = e.target.value;
 
     this.setState({
-      phoneStatus: value,
-      newloginStatus: value
+      phoneStatus: value
     });
+  }
+
+  // 监听手机区号
+  onChangeSelected = (value, options) => {
+    console.log(options.props.item.nationalPhoneCode)
+    this.setState({
+      areaCode: options.props.item.nationalPhoneCode
+    })
   }
 
   render() {
     const { getFieldDecorator } = this.props.form;
     const { newloginStatus } = this.props;
     const { email, account, phone, code, password, redirect } = this.state;
-
+    const prefixSelector = getFieldDecorator('prefix', {
+      initialValue: 'China +86',
+    })(
+      <Select onChange={this.onChangeSelected} style={{ maxWidth: 180 }}>
+        {
+          countryCode.map((item, index) => {
+            return <Option value={item.name} item={item} key={index}><Tooltip title={ item.name + ' ' + item.nationalPhoneCode }>{ item.name + ' ' + item.nationalPhoneCode }</Tooltip></Option>
+          })
+        }
+      </Select>
+    );
     let LoginInputGroup;
 
     if (redirect) {
@@ -182,7 +200,7 @@ class NormalLoginForm extends Component {
           <div className="radio-group">
             <RadioGroup onChange={this.handleChangePhone} value={this.state.phoneStatus}>
               <Radio value={2}>密码登陆</Radio>
-              <Radio value={3}>动态验证码登陆</Radio>
+              {/* <Radio value={3}>动态验证码登陆</Radio> */}
             </RadioGroup>
           </div>
 
@@ -190,7 +208,7 @@ class NormalLoginForm extends Component {
             {getFieldDecorator('phone', {
               rules: [{ required: true, message: '请输入手机号！' }],
             })(
-              <Input prefix={<Icon type="tablet" style={{ color: 'rgba(0,0,0,.25)' }} />} onChange={ this.handleChangeInput.bind(this, "手机号") } setfieldsvalue={ phone } placeholder="手机号" />
+              <Input addonBefore={prefixSelector} prefix={<Icon type="tablet" style={{ color: 'rgba(0,0,0,.25)' }} />} onChange={ this.handleChangeInput.bind(this, "手机号") } setfieldsvalue={ phone } placeholder="手机号" />
             )}
           </FormItem>
 
@@ -209,10 +227,10 @@ class NormalLoginForm extends Component {
                 {getFieldDecorator('code', {
                   rules: [{ required: true, message: '请输入验证码!' }],
                 })(
-                  <Input prefix={<Icon type="mail" onChange={ this.handleChangeInput.bind(this, "验证码") } setfieldsvalue={ code } style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="验证码" />
+                  <Input prefix={<Icon type="mail" setfieldsvalue={ code } style={{ color: 'rgba(0,0,0,.25)' }} />} onChange={ this.handleChangeInput.bind(this, "验证码") } placeholder="验证码" />
                 )}
               </div>
-              <GetCode />
+              <GetCode account={phone} type="phone" />
               <div className="clear"></div>
             </FormItem>
           }

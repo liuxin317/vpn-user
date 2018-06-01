@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import "./style.scss";
-import { Form, Input, Select, Icon, Checkbox, Button, message } from 'antd';
+import { Form, Input, Select, Icon, Checkbox, Button, message, Tooltip } from 'antd';
 import HttpRequest from '../../requset/Fetch';
 import { Link } from 'react-router-dom';
 import GetCode from '../common/getCode';
+import countryCode from '@/configure/countryCode';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -25,6 +26,8 @@ class Register extends Component {
     }],
     newRegisterId: 0, // 当前注册类型id
     checked: true, // 是否同注册协议;
+    phone: '', // 手机号
+    areaCode: '+86', // 区号
   }
 
   // 切换菜单
@@ -53,7 +56,7 @@ class Register extends Component {
 
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        const { newRegisterId, checked } = this.state;
+        const { newRegisterId, checked, areaCode } = this.state;
         const { email, account, phone, code, password, password_01, password_02 } = values;
         let compoundPassWord;
 
@@ -87,7 +90,7 @@ class Register extends Component {
           type: newRegisterId,
           email,
           account,
-          phone,
+          phone: phone ? (areaCode + phone) : '',
           code,
           password: compoundPassWord
         }, res => {
@@ -110,15 +113,36 @@ class Register extends Component {
     })
   }
 
+  // 监听Input
+  onChangeInput = (name, e) => {
+    let obj = {};
+    obj[name] = e.target.value;
+
+    this.setState({
+      ...obj
+    })
+  }
+
+  // 监听手机区号
+  onChangeSelected = (value, options) => {
+    console.log(options.props.item.nationalPhoneCode)
+    this.setState({
+      areaCode: options.props.item.nationalPhoneCode
+    })
+  }
+
   render () {
-    const { registerType, newRegisterId } = this.state;
+    const { registerType, newRegisterId, phone, areaCode } = this.state;
     const { getFieldDecorator } = this.props.form;
     const prefixSelector = getFieldDecorator('prefix', {
-      initialValue: '86',
+      initialValue: 'China +86',
     })(
-      <Select style={{ width: 70 }}>
-        <Option value="86">+86</Option>
-        <Option value="87">+87</Option>
+      <Select onChange={this.onChangeSelected} style={{ minWidth: 150 }}>
+        {
+          countryCode.map((item, index) => {
+            return <Option value={item.name} item={item} key={index}><Tooltip title={ item.name + ' ' + item.nationalPhoneCode }>{ item.name + ' ' + item.nationalPhoneCode }</Tooltip></Option>
+          })
+        }
       </Select>
     );
 
@@ -196,7 +220,7 @@ class Register extends Component {
           {getFieldDecorator('phone', {
             rules: [{ required: true, message: '请填写手机号' }],
           })(
-            <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
+            <Input onChange={this.onChangeInput.bind(this, 'phone')} addonBefore={prefixSelector} style={{ width: '100%' }} />
           )}
         </FormItem>
 
@@ -221,10 +245,10 @@ class Register extends Component {
             {getFieldDecorator('code', {
               rules: [{ required: true, message: '请输入验证码!' }],
             })(
-              <Input prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" />
+              <Input prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />} />
             )}
           </div>
-          <GetCode />
+          <GetCode account={phone} areaCode={areaCode} type="phone" />
           <div className="clear"></div>
         </FormItem>
       </div>)

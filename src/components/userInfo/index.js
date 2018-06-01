@@ -223,8 +223,8 @@ class UserInfo extends Component {
             <figure className="info-name__img">
               <img src={ headImg } style={{ width: 35, height: 35 }} alt=""/>
               <figcaption className="name">
-                <Tooltip title={ userInfo ? userInfo.account ? userInfo.account : userInfo.email  : "" }>
-                  <span>{ userInfo ? userInfo.account ? userInfo.account : userInfo.email  : "" }</span>
+                <Tooltip title={ userInfo ? userInfo.account ? userInfo.account : userInfo.email ? userInfo.email : userInfo.phone : "" }>
+                  <span>{ userInfo ? userInfo.account ? userInfo.account : userInfo.email ? userInfo.email : userInfo.phone : "" }</span>
                 </Tooltip>
               </figcaption>
             </figure>
@@ -258,7 +258,7 @@ class UserInfo extends Component {
                 <div className="info-row-group">
                   <label htmlFor="name">账号：</label>
                   <div className="edit-group">
-                    { userInfo ? userInfo.account ? userInfo.account : userInfo.email  : "" }
+                    { userInfo ? userInfo.account ? userInfo.account : userInfo.email ? userInfo.email : userInfo.phone : "" }
                   </div>
                 </div>
 
